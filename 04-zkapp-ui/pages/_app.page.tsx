@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -43,14 +42,22 @@ export default function App() {
   // Do Setup
 
   useEffect(() => {
+    async function timeout(seconds: number): Promise<void> {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, seconds * 1000);
+      });
+    }
+
     (async () => {
       if (!state.hasBeenSetup) {
+        console.log('Initializing worker client.');
         const zkappWorkerClient = new ZkappWorkerClient();
 
-        console.log('Loading SnarkyJS...');
-        await zkappWorkerClient.loadSnarkyJS();
-        console.log('done');
+        await timeout(5);
 
+        // This is being called before the worker was initialized and therefore nothing happens.
         await zkappWorkerClient.setActiveInstanceToBerkeley();
 
         const mina = (window as any).mina;

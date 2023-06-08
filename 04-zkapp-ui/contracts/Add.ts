@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17,15 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import {
-  Field,
-  SmartContract,
-  state,
-  State,
-  method,
-  DeployArgs,
-  Permissions,
-} from 'snarkyjs';
+import { Field, SmartContract, state, State, method } from 'snarkyjs';
 
 /**
  * Basic Example
@@ -39,23 +30,14 @@ import {
 export class Add extends SmartContract {
   @state(Field) num = State<Field>();
 
-  deploy(args: DeployArgs) {
-    super.deploy(args);
-    this.account.permissions.set({
-      ...Permissions.default(),
-      editState: Permissions.proofOrSignature(),
-    });
-  }
-
-  @method init() {
+  init() {
+    super.init();
     this.num.set(Field(1));
   }
 
   @method update() {
-    const currentState = this.num.get();
-    this.num.assertEquals(currentState); // precondition that links this.num.get() to the actual on-chain state
+    const currentState = this.num.getAndAssertEquals();
     const newState = currentState.add(2);
-    newState.assertEquals(currentState.add(2));
     this.num.set(newState);
   }
 }

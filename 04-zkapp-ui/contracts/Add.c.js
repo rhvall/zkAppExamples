@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -16,6 +15,7 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+
 var __decorate =
   (this && this.__decorate) ||
   function (decorators, target, key, desc) {
@@ -41,14 +41,7 @@ var __metadata =
     if (typeof Reflect === 'object' && typeof Reflect.metadata === 'function')
       return Reflect.metadata(k, v);
   };
-import {
-  Field,
-  SmartContract,
-  state,
-  State,
-  method,
-  Permissions,
-} from 'snarkyjs';
+import { Field, SmartContract, state, State, method } from 'snarkyjs';
 /**
  * Basic Example
  * See https://docs.minaprotocol.com/zkapps for more info.
@@ -63,21 +56,13 @@ export class Add extends SmartContract {
     super(...arguments);
     this.num = State();
   }
-  deploy(args) {
-    super.deploy(args);
-    this.account.permissions.set({
-      ...Permissions.default(),
-      editState: Permissions.proofOrSignature(),
-    });
-  }
   init() {
+    super.init();
     this.num.set(Field(1));
   }
   update() {
-    const currentState = this.num.get();
-    this.num.assertEquals(currentState); // precondition that links this.num.get() to the actual on-chain state
+    const currentState = this.num.getAndAssertEquals();
     const newState = currentState.add(2);
-    newState.assertEquals(currentState.add(2));
     this.num.set(newState);
   }
 }
@@ -86,17 +71,6 @@ __decorate(
   Add.prototype,
   'num',
   void 0
-);
-__decorate(
-  [
-    method,
-    __metadata('design:type', Function),
-    __metadata('design:paramtypes', []),
-    __metadata('design:returntype', void 0),
-  ],
-  Add.prototype,
-  'init',
-  null
 );
 __decorate(
   [

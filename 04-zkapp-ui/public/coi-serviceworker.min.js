@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information

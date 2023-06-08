@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Mina, isReady, PublicKey, fetchAccount } from 'snarkyjs';
+import { Mina, PublicKey, fetchAccount } from 'snarkyjs';
 
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
@@ -34,20 +33,18 @@ const state = {
 // ---------------------------------------------------------------------------------------
 
 const functions = {
-  loadSnarkyJS: async (args: {}) => {
-    await isReady;
-  },
-  setActiveInstanceToBerkeley: async (args: {}) => {
+  setActiveInstanceToBerkeley: async (args = {}) => {
     const Berkeley = Mina.Network(
       'https://proxy.berkeley.minaexplorer.com/graphql'
     );
+    console.log('Created Berkeley');
     Mina.setActiveInstance(Berkeley);
   },
-  loadContract: async (args: {}) => {
+  loadContract: async (args = {}) => {
     const { Add } = await import('../contracts/Add.c.js');
     state.Add = Add;
   },
-  compileContract: async (args: {}) => {
+  compileContract: async (args = {}) => {
     await state.Add!.compile();
   },
   fetchAccount: async (args: { publicKey58: string }) => {
@@ -58,20 +55,20 @@ const functions = {
     const publicKey = PublicKey.fromBase58(args.publicKey58);
     state.zkapp = new state.Add!(publicKey);
   },
-  getNum: async (args: {}) => {
+  getNum: async (args = {}) => {
     const currentNum = await state.zkapp!.num.get();
     return JSON.stringify(currentNum.toJSON());
   },
-  createUpdateTransaction: async (args: {}) => {
+  createUpdateTransaction: async (args = {}) => {
     const transaction = await Mina.transaction(() => {
       state.zkapp!.update();
     });
     state.transaction = transaction;
   },
-  proveUpdateTransaction: async (args: {}) => {
+  proveUpdateTransaction: async (args = {}) => {
     await state.transaction!.prove();
   },
-  getTransactionJSON: async (args: {}) => {
+  getTransactionJSON: async (args = {}) => {
     return state.transaction!.toJSON();
   },
 };
@@ -90,17 +87,15 @@ export type ZkappWorkerReponse = {
   id: number;
   data: any;
 };
-if (process.browser) {
-  addEventListener(
-    'message',
-    async (event: MessageEvent<ZkappWorkerRequest>) => {
-      const returnData = await functions[event.data.fn](event.data.args);
 
-      const message: ZkappWorkerReponse = {
-        id: event.data.id,
-        data: returnData,
-      };
-      postMessage(message);
-    }
-  );
-}
+addEventListener('message', async (event: MessageEvent<ZkappWorkerRequest>) => {
+  const returnData = await functions[event.data.fn](event.data.args);
+
+  const message: ZkappWorkerReponse = {
+    id: event.data.id,
+    data: returnData,
+  };
+  postMessage(message);
+});
+
+console.log('Worker Initialized Successfully.');

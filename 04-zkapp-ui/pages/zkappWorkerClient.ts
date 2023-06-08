@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -27,10 +26,6 @@ import type {
 
 export default class ZkappWorkerClient {
   // ---------------------------------------------------------------------------------------
-
-  loadSnarkyJS() {
-    return this._call('loadSnarkyJS', {});
-  }
 
   setActiveInstanceToBerkeley() {
     return this._call('setActiveInstanceToBerkeley', {});
@@ -90,6 +85,7 @@ export default class ZkappWorkerClient {
   nextId: number;
 
   constructor() {
+    //import.meta.url - Provides the URL of the currently executing module
     this.worker = new Worker(new URL('./zkappWorker.ts', import.meta.url));
     this.promises = {};
     this.nextId = 0;
@@ -109,9 +105,9 @@ export default class ZkappWorkerClient {
         fn,
         args,
       };
-
+      console.log('Posting...');
       this.worker.postMessage(message);
-
+      console.log('Successfully Posted.');
       this.nextId++;
     });
   }
