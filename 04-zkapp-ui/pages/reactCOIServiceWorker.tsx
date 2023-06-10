@@ -1,7 +1,6 @@
 // https://github.com/rhvall/MinaDevContainer
-// Based on code from https://github.com/rhvall/04-zkapp-browserui
-// Origianl tutorial: https://docs.minaprotocol.com/zkapps/tutorials/zkapp-ui-with-react
-// June 2023
+// Based on code from https://github.com/o1-labs/docs2, https://github.com/br0wnD3v/zkApp_Base
+// May 2023
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -25,7 +24,7 @@ function loadCOIServiceWorker() {
     window.location.hostname != 'localhost'
   ) {
     const coi = window.document.createElement('script');
-    coi.setAttribute('src', '/zkApp-examples/coi-serviceworker.min.js');
+    coi.setAttribute('src', '../public/coi-serviceworker.min.js'); // update if your repo name changes for npm run deploy to work successfully
     window.document.head.appendChild(coi);
   }
 }
