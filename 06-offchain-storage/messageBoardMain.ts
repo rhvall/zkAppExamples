@@ -100,7 +100,7 @@ if (!priorLeafIsEmpty) {
 
   const publicKeyFields = fields.slice(0, 2);
   priorLeafSigner = PublicKey.fromGroup(
-    new Group(publicKeyFields[0], publicKeyFields[1])
+    new Group({ x: publicKeyFields[0], y: publicKeyFields[1] })
   );
 
   const messageFields = fields.slice(2);

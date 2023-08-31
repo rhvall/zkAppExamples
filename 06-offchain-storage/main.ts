@@ -132,8 +132,8 @@ async function updateTree() {
     priorLeafNumber = idx2fields.get(index)![0];
     newLeafNumber = priorLeafNumber.add(3);
   } else {
-    priorLeafNumber = Field.zero;
-    newLeafNumber = Field.one;
+    priorLeafNumber = Field(0);
+    newLeafNumber = Field(1);
   }
 
   // update the leaf, and save it in the storage server

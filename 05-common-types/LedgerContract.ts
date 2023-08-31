@@ -68,7 +68,7 @@ export class LedgerContract extends SmartContract {
     );
     rootSenderBefore.assertEquals(initialLedgerRoot);
 
-    senderBalanceBefore.assertGte(sendAmount);
+    senderBalanceBefore.assertGreaterThanOrEqual(sendAmount);
 
     // compute the sender state after sending
     const rootSenderAfter = senderWitness.calculateRoot(
@@ -85,7 +85,7 @@ export class LedgerContract extends SmartContract {
         Poseidon.hash(recipientPublicKey.toFields()),
       ])
     );
-    const rootRecipientBeforeEmpty = recipientWitness.calculateRoot(Field.zero);
+    const rootRecipientBeforeEmpty = recipientWitness.calculateRoot(Field(0));
 
     const recipientAccountNew = rootSenderAfter.equals(
       rootRecipientBeforeEmpty
@@ -97,7 +97,7 @@ export class LedgerContract extends SmartContract {
       (() => {
         // new account
         // balance before must be zero
-        return recipientBalanceBefore.equals(Field.zero);
+        return recipientBalanceBefore.equals(Field(0));
       })(),
       (() => {
         // existing account
