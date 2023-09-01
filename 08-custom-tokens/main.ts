@@ -34,8 +34,6 @@ console.log('compiling...');
 
 await BasicTokenContract.compile();
 
-console.log('compiled');
-
 // ----------------------------------------------------
 
 console.log('deploying...');
@@ -49,22 +47,10 @@ const deploy_txn = await Mina.transaction(deployerAccount.toPublicKey(), () => {
 console.log('prooving...');
 await deploy_txn.prove();
 console.log('signing...');
-console.log('Deployer: ', deployerAccount.toPublicKey().toBase58());
-console.log('Contract: ', zkAppAddress.toBase58());
 await deploy_txn.sign([deployerAccount, zkAppPrivateKey]).send();
 
-// ----------------------------------------------------
-
-console.log('initializing...');
-
-const init_txn = await Mina.transaction(deployerAccount.toPublicKey(), () => {
-  zkAppInstance.init();
-});
-
-await init_txn.prove();
-await init_txn.sign([deployerAccount]).send();
-
-console.log('initialized');
+console.log('Deployer: ', deployerAccount.toPublicKey().toBase58());
+console.log('Contract: ', zkAppAddress.toBase58());
 
 // ----------------------------------------------------
 
